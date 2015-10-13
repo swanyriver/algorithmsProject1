@@ -1,6 +1,6 @@
 all: maxsubarray
 
-maxsubarray:
+maxsubarray: maxsubarray.c
 	gcc -o maxsubarray maxsubarray.c
 
 

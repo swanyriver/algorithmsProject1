@@ -11,10 +11,7 @@ int debug = 0;
 
 struct maxij
 {
-  //int i,j,max;
-
-  //changed because all of these functions return j<=i  //why?
-  int j,i,max;
+  int i,j,max;
 };
 
 /*int write_file(FILE *wfile, int a[], int size_a, int begin, int end, int sum_max) {
@@ -59,7 +56,7 @@ int write_array_file(FILE *wfile, int a[], int size_a) {
 //
 //
 //Algorithm 1: Enumeration
-struct maxij maxsubarray_1(FILE *wfile, int a[], int n)
+struct maxij maxsubarray_1(int a[], int n)
 {
     int sum_current = 0;
     int sum_max = 0;
@@ -70,12 +67,12 @@ struct maxij maxsubarray_1(FILE *wfile, int a[], int n)
     int sumIndex;
 
     // Algorithm
-    for (j=0; j < n; j++) {
-      for (i=j; i < n; i++) {
-        //compute sum from i to j //j to i for now
+    for (i=0; i < n; i++) {
+      for (j=i; j < n; j++) {
+        //compute sum from i to j
         sum_current = 0;
-        for (sumIndex=j; sumIndex<=i; ++sumIndex) {
-          sum_current+=a[sumIndex];
+        for (sumIndex=i; sumIndex<=j; ++sumIndex) {
+          sum_current += a[sumIndex];
         }
 
         if (sum_current > sum_max){
@@ -99,7 +96,7 @@ struct maxij maxsubarray_1(FILE *wfile, int a[], int n)
 
 //correct
 //Algorithm 2: Better Enumeration
-struct maxij maxsubarray_2(FILE *wfile, int a[], int begin, int n, int wflag)
+struct maxij maxsubarray_2(int a[], int n)
 {
     int sum_current = 0;
     int sum_max = 0;
@@ -109,14 +106,14 @@ struct maxij maxsubarray_2(FILE *wfile, int a[], int begin, int n, int wflag)
     int j = 0;
     
     // Algorithm
-    for (j=begin; j < n; j++) {
+    for (i=0; i < n; i++) {
       sum_current = 0;
-      // start with i=j
-      for (i=j; i < n; i++) {
-        if (j == i) 
-          sum_current = a[i];
+      // start with j=i
+      for (j=i; j < n; j++) {
+        if (i == j) 
+          sum_current = a[j];
         else 
-          sum_current += a[i]; 
+          sum_current += a[j]; 
         if (sum_current > sum_max) {
           sum_max = sum_current;
           max_i = i;
@@ -124,12 +121,6 @@ struct maxij maxsubarray_2(FILE *wfile, int a[], int begin, int n, int wflag)
         }         
       }
     } 
-
-    /*if (!wflag) {
-      maximum_i = max_i;
-      maximum_j = max_j;
-      return sum_max;
-    }*/
 
     if (debug) printf("max_i = %d max_j = %d", max_i, max_j);
     if (debug) printf("sum_max=%d\n",sum_max);
@@ -243,7 +234,8 @@ struct maxij maxsubarray_3(FILE *wfile, int a[],int n)
 }
 */
 // Algorithm 4: Linear-time
-struct maxij maxsubarray_4(FILE *wfile, int a[],int n)
+//This is kadanes algorithm,  but i think the one that the assignment asked for is different
+struct maxij maxsubarray_4(int a[],int n)
 {
   int max_real = 0;
   int max = 0;
@@ -274,7 +266,7 @@ struct maxij maxsubarray_4(FILE *wfile, int a[],int n)
   // write the array, sub_array, and max_real to oupt file
   //write_file(wfile, &a[0], n, i, max_i, max_real); 
 
-  struct maxij result = {max_i,i,max_real};
+  struct maxij result = {i,max_i,max_real};
   return result;
 } 
  
@@ -363,12 +355,12 @@ int main(){
     //algorithms for max subarray
     struct maxij result;
 
-    result = maxsubarray_1(wfile, a, size);
+    result = maxsubarray_1(a, size);
     //printf("max:%d,i:%d,j:%d\n",result.max,result.i,result.j );
     write_array_file(wfile,a + result.i, result.j - result.i + 1);
     fprintf(wfile, "%d\n", result.max);
 
-    result = maxsubarray_2(wfile, a, 0, size, 1);
+    result = maxsubarray_2(a,size);
     //printf("max:%d,i:%d,j:%d\n",result.max,result.i,result.j );
     write_array_file(wfile,a + result.i, result.j - result.i + 1);
     fprintf(wfile, "%d\n", result.max);
@@ -377,7 +369,7 @@ int main(){
     write_array_file(wfile,a + result.i, result.j - result.i + 1);
     fprintf(wfile, "%d\n", result.max);*/
 
-    result = maxsubarray_4(wfile, a, size);
+    result = maxsubarray_4(a, size);
     //printf("max:%d,i:%d,j:%d\n",result.max,result.i,result.j );
     write_array_file(wfile,a + result.i, result.j - result.i + 1);
     fprintf(wfile, "%d\n", result.max);
