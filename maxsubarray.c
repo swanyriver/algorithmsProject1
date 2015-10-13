@@ -1,4 +1,4 @@
-#include<stdio.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 // maximum number of integers in the array
@@ -13,26 +13,31 @@ int debug = 0;
 int maximum_i;
 int maximum_j;
 
+struct maxij
+{
+  int i,j,max;
+};
+
 int write_file(FILE *wfile, int a[], int size_a, int begin, int end, int sum_max) {
     int i;
 
     // print the array
     fprintf(wfile, "[");
     for (i=0; i < size_a; i++) {
-	fprintf(wfile, "%d", a[i]);
-	if (i+1 == size_a)
-		fprintf(wfile, "]\n");
-	else
-		fprintf(wfile, ", ");
+  fprintf(wfile, "%d", a[i]);
+  if (i+1 == size_a)
+    fprintf(wfile, "]\n");
+  else
+    fprintf(wfile, ", ");
     }
     // print the sub array
     fprintf(wfile, "[");
     for (i=begin; i <= end; i++) {
-	fprintf(wfile, "%d", a[i]);
-	if (i == end)
-		fprintf(wfile, "]\n");
-	else
-		fprintf(wfile, ", ");
+  fprintf(wfile, "%d", a[i]);
+  if (i == end)
+    fprintf(wfile, "]\n");
+  else
+    fprintf(wfile, ", ");
     }
     // print the sum of sub array
     fprintf(wfile, "%d\n\n", sum_max);
@@ -55,10 +60,10 @@ int maxsubarray_1(FILE *wfile, int a[], int n)
     for (j=0; j < n; j++) {
         sum_current = 0;
         for (i=0; i < n; i++) {
-	    if (j == i) 
-		sum_current = a[i];
-	    else 
-            	sum_current = sum_current + a[i]; 
+      if (j == i) 
+    sum_current = a[i];
+      else 
+              sum_current = sum_current + a[i]; 
             if (sum_current > sum_max) {
                 sum_max = sum_current;
                 max_i = i;
@@ -90,10 +95,10 @@ int maxsubarray_2(FILE *wfile, int a[], int begin, int n, int wflag)
         sum_current = 0;
         // start with i=j
         for (i=j; i < n; i++) {
-	    if (j == i) 
-		sum_current = a[i];
-	    else 
-            	sum_current = sum_current + a[i]; 
+      if (j == i) 
+    sum_current = a[i];
+      else 
+              sum_current = sum_current + a[i]; 
             if (sum_current > sum_max) {
                 sum_max = sum_current;
                 max_i = i;
@@ -103,9 +108,9 @@ int maxsubarray_2(FILE *wfile, int a[], int begin, int n, int wflag)
     } 
 
     if (!wflag) {
-	maximum_i = max_i;
-	maximum_j = max_j;
-	return sum_max;
+  maximum_i = max_i;
+  maximum_j = max_j;
+  return sum_max;
     }
 
     if (debug) printf("max_i = %d max_j = %d", max_i, max_j);
@@ -132,7 +137,7 @@ int max_middle(int a[], int start, int mid, int end)
         if (sum > left_sum) {
             left_sum = sum;
             maximum_i = i;
-	}
+  }
 
     }
  
@@ -190,11 +195,11 @@ int maxsubarray_3(FILE *wfile, int a[],int n)
     }
 
     printf("max_begin=%d, max_end = %d, max_mid=%d\n", \
-	max_begin, max_end, max_mid);
+  max_begin, max_end, max_mid);
     if ((max_begin >= max_end) && (max_begin >= max_mid))
     {
         // max is in the begining
-	if (debug) printf("beginning\n");
+  if (debug) printf("beginning\n");
         write_file(wfile, &a[0], n, max_begin_j, max_begin_i, max_begin);
         return max_begin;
     }
@@ -202,7 +207,7 @@ int maxsubarray_3(FILE *wfile, int a[],int n)
     if ((max_end >= max_begin) && (max_end >= max_mid))
     {
         // max is in the end
-	if (debug) printf("end\n");
+  if (debug) printf("end\n");
         write_file(wfile, &a[0], n, max_end_j, max_end_i, max_end);
         return max_end;
     }
@@ -216,124 +221,130 @@ int maxsubarray_3(FILE *wfile, int a[],int n)
 // Algorithm 4: Linear-time
 int maxsubarray_4(FILE *wfile, int a[],int n)
 {
-    int max_real = 0;
-    int max = 0;
-    int i;
-    int max_i = 0;
+  int max_real = 0;
+  int max = 0;
+  int i;
+  int max_i = 0;
 
-    // Algorithm
-    for(i = 0; i < n; i++) {
-        max = max + a[i];
-        if (max < 0)
-            max = 0;
-        if (max_real < max) {
-            max_real = max;
-	    max_i = i;
-	}
+  // Algorithm
+  for(i = 0; i < n; i++) {
+    max = max + a[i];
+    if (max < 0)
+      max = 0;
+    if (max_real < max) {
+      max_real = max;
+      max_i = i;
     }
+  }
 
-    // find the start of the sub array
-    if (debug) printf("max_i=%d\n", max_i);
-    for (max=max_real,  i = max_i; i > 0; i--) {
-	max = max - a[i];
-	if (debug) printf("max=%d", max);
-	if (max <= 0) {
-	    break;
-	}
+  // find the start of the sub array
+  if (debug) printf("max_i=%d\n", max_i);
+  for (max=max_real, i = max_i; i > 0; i--) {
+    max = max - a[i];
+    if (debug) printf("max=%d", max);
+    if (max <= 0) {
+      break;
     }
+  }
 
-    // write the array, sub_array, and max_real to oupt file
-    write_file(wfile, &a[0], n, i, max_i, max_real); 
+  // write the array, sub_array, and max_real to oupt file
+  write_file(wfile, &a[0], n, i, max_i, max_real); 
 
-    return max_real;
+  return max_real;
 } 
  
 // a debug routine to print array
 int print_a(int a[], int a_dx) {
-    int i;
+  int i;
 
-    printf("INPUT ARRAY: [");
-    for (i=0; i < a_dx; i++) {
-	printf("%i", a[i]);
-	if (i+1 == a_dx) {
-		printf("]\n");
-	} else {
-		printf(",");
-	}
+  printf("INPUT ARRAY: [");
+  for (i=0; i < a_dx; i++) {
+    printf("%i", a[i]);
+    if (i+1 == a_dx) {
+      printf("]\n");
+    } else {
+      printf(",");
     }
-    printf("ARRAY size : %d\n", a_dx);
+  }
+  printf("ARRAY size : %d\n", a_dx);
 }
 
 // read one line; in other words, read one array in
 //
 int read_a(FILE *rfile, int a[], int *eof_flagp) {
 
-   int i;
-   int a_dx = 0;
-   unsigned char c;
-   int x;
+  int i;
+  int a_dx = 0;
+  unsigned char c;
+  int x;
 
-   if ((x = fscanf (rfile, "[%d,", &i)) != 1 ) {
-	printf("Done.\n");
-	return 0;
-   }
-   if (debug) printf("i=%d\n", i);  
-   a[a_dx++] = i;
-   while ( 1 ) {
-	if (fscanf (rfile, "%d,", &i) != 1 ) {
-		while (fscanf (rfile, "%c", &c) == 1) {
-   			if (debug) printf("c = '%c'", c);  
-			if ( c == '\n') {
-   				if (debug) printf("c = \\n");  
-				break;
-			}
-			if ( c == EOF ) {
-   				printf("c = EOF");  
-				*eof_flagp = 1;
-				break;
-			}
-		}
-		break;
-	}
-	if (debug) printf("ei=%d\n", i);  
-	a[a_dx++] = i;
-   }
+  if ((x = fscanf (rfile, "[%d,", &i)) != 1 ) {
+    printf("Done.\n");
+    return 0;
+  }
+  
+  if (debug) printf("i=%d\n", i);  
+  
+  a[a_dx++] = i;
+  while ( 1 ) {
+    if (fscanf (rfile, "%d,", &i) != 1 ) {
+      while (fscanf (rfile, "%c", &c) == 1) {
+        if (debug) printf("c = '%c'", c);  
+        if ( c == '\n') {
+          if (debug) printf("c = \\n");  
+          break;
+        }
+        if ( c == EOF ) {
+          printf("c = EOF");  
+          *eof_flagp = 1;
+          break;
+        }
+      }
+      break;
+    }
+    if (debug) printf("ei=%d\n", i);  
+    a[a_dx++] = i;
+  }
 
-   return a_dx;
+  return a_dx;
 }
 
-int main()
-{
-   FILE* rfile;
-   FILE* wfile;
-   int size = 0;
-   int a[MAX_ARRAY_SIZE];
-   int eof_flag = 0;
+int main(){
 
-   if ((rfile = fopen(INPUT_FILE_NAME, "r")) == NULL) {
-	printf("Cannot open '%s' for reading\n", INPUT_FILE_NAME);
-	exit(-1);
-   }
+  FILE* rfile;
+  FILE* wfile;
+  int size = 0;
+  int a[MAX_ARRAY_SIZE];
+  int eof_flag = 0;
 
-   if ((wfile = fopen(OUTPUT_FILE_NAME, "w")) == NULL) {
-	printf("Cannot open '%s' for writing\n", OUTPUT_FILE_NAME);
-	exit(-1);
-   }
+  if ((rfile = fopen(INPUT_FILE_NAME, "r")) == NULL) {
+    printf("Cannot open '%s' for reading\n", INPUT_FILE_NAME);
+    exit(-1);
+  }
 
-   while (eof_flag == 0) {
-	if ((size = read_a(rfile, &a[0], &eof_flag)) == 0) {
-		break;
-	}
-   	print_a(a, size);
-   	// maxsubarray_1(wfile, a, size);
-   	// maxsubarray_2(wfile, a, 0, size, 1);
-   	maxsubarray_3(wfile, a, size);
-   	// maxsubarray_4(wfile, a, size);
-   }
+  if ((wfile = fopen(OUTPUT_FILE_NAME, "w")) == NULL) {
+    printf("Cannot open '%s' for writing\n", OUTPUT_FILE_NAME);
+    exit(-1);
+  }
 
-   // TBD close on exits also
-   fclose(rfile);
-   fclose(wfile);
+  while (eof_flag == 0) {
+    if ((size = read_a(rfile, &a[0], &eof_flag)) == 0) {
+      break;
+    }
+    print_a(a, size);
 
-   return 0;
+    //algorithms for max subarray
+
+    // maxsubarray_1(wfile, a, size);
+    // maxsubarray_2(wfile, a, 0, size, 1);
+    maxsubarray_3(wfile, a, size);
+    // maxsubarray_4(wfile, a, size);
+
+  }
+
+  // TBD close on exits also
+  fclose(rfile);
+  fclose(wfile);
+
+  return 0;
 }
