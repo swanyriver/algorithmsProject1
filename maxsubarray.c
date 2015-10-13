@@ -9,16 +9,15 @@
 // set it to 1 for debug
 int debug = 0;
 
-//globals for capturing sub array indices in algorithm 3  
-int maximum_i;
-int maximum_j;
-
 struct maxij
 {
-  int i,j,max;
+  //int i,j,max;
+
+  //changed because all of these functions return j<=i  //why?
+  int j,i,max;
 };
 
-int write_file(FILE *wfile, int a[], int size_a, int begin, int end, int sum_max) {
+/*int write_file(FILE *wfile, int a[], int size_a, int begin, int end, int sum_max) {
     int i;
 
     // print the array
@@ -40,14 +39,27 @@ int write_file(FILE *wfile, int a[], int size_a, int begin, int end, int sum_max
     fprintf(wfile, ", ");
     }
     // print the sum of sub array
-    fprintf(wfile, "%d\n\n", sum_max);
-    
+    fprintf(wfile, "%d\n\n", sum_max);   
+}*/
+
+int write_array_file(FILE *wfile, int a[], int size_a) {
+    int i;
+
+    // print the array
+  fprintf(wfile, "[");
+  for (i=0; i < size_a; i++) {
+    fprintf(wfile, "%d", a[i]);
+    if (i+1 == size_a)
+      fprintf(wfile, "]\n");
+    else
+      fprintf(wfile, ", ");
+  }  
 }
 
 //
 //
 //Algorithm 1: Enumeration
-int maxsubarray_1(FILE *wfile, int a[], int n)
+struct maxij maxsubarray_1(FILE *wfile, int a[], int n)
 {
     int sum_current = 0;
     int sum_max = 0;
@@ -75,13 +87,15 @@ int maxsubarray_1(FILE *wfile, int a[], int n)
     if (debug) printf("sum_max=%d\n",sum_max);
 
     // write the array, sub_array, and sum_max to oupt file
-    write_file(wfile, &a[0], n, max_j, max_i, sum_max); 
+    //write_file(wfile, &a[0], n, max_j, max_i, sum_max); 
 
-    return sum_max;
+    struct maxij result = {max_i,max_j,sum_max};
+    return result;
 }
 
+//correct
 //Algorithm 2: Better Enumeration
-int maxsubarray_2(FILE *wfile, int a[], int begin, int n, int wflag)
+struct maxij maxsubarray_2(FILE *wfile, int a[], int begin, int n, int wflag)
 {
     int sum_current = 0;
     int sum_max = 0;
@@ -92,39 +106,40 @@ int maxsubarray_2(FILE *wfile, int a[], int begin, int n, int wflag)
     
     // Algorithm
     for (j=begin; j < n; j++) {
-        sum_current = 0;
-        // start with i=j
-        for (i=j; i < n; i++) {
-      if (j == i) 
-    sum_current = a[i];
-      else 
-              sum_current = sum_current + a[i]; 
-            if (sum_current > sum_max) {
-                sum_max = sum_current;
-                max_i = i;
-                max_j = j;
-            }         
-        }
+      sum_current = 0;
+      // start with i=j
+      for (i=j; i < n; i++) {
+        if (j == i) 
+          sum_current = a[i];
+        else 
+          sum_current = sum_current + a[i]; 
+        if (sum_current > sum_max) {
+          sum_max = sum_current;
+          max_i = i;
+          max_j = j;
+        }         
+      }
     } 
 
-    if (!wflag) {
-  maximum_i = max_i;
-  maximum_j = max_j;
-  return sum_max;
-    }
+    /*if (!wflag) {
+      maximum_i = max_i;
+      maximum_j = max_j;
+      return sum_max;
+    }*/
 
     if (debug) printf("max_i = %d max_j = %d", max_i, max_j);
     if (debug) printf("sum_max=%d\n",sum_max);
 
     // write the array, sub_array, and sum_max to oupt file
-    write_file(wfile, &a[0], n, max_j, max_i, sum_max); 
+    //write_file(wfile, &a[0], n, max_j, max_i, sum_max); 
 
-    return sum_max;
+    struct maxij result = {max_i,max_j,sum_max};
+    return result;
 }
 
 //Algorithm 3: Divide and Conquer
 
-int max_middle(int a[], int start, int mid, int end)
+/*int max_middle(int a[], int start, int mid, int end)
 {
     int sum = 0;
     int left_sum = 0;
@@ -156,7 +171,7 @@ int max_middle(int a[], int start, int mid, int end)
 }
 
 
-int maxsubarray_3(FILE *wfile, int a[],int n)
+struct maxij maxsubarray_3(FILE *wfile, int a[],int n)
 {
     int max_sum = 0;
     int sub[MAX_ARRAY_SIZE];
@@ -200,26 +215,31 @@ int maxsubarray_3(FILE *wfile, int a[],int n)
     {
         // max is in the begining
   if (debug) printf("beginning\n");
-        write_file(wfile, &a[0], n, max_begin_j, max_begin_i, max_begin);
-        return max_begin;
+        //write_file(wfile, &a[0], n, max_begin_j, max_begin_i, max_begin);
+
+        struct maxij result = {max_begin_i,max_begin_j,sum_max};
+        return result;
     }
 
     if ((max_end >= max_begin) && (max_end >= max_mid))
     {
         // max is in the end
   if (debug) printf("end\n");
-        write_file(wfile, &a[0], n, max_end_j, max_end_i, max_end);
-        return max_end;
+        //write_file(wfile, &a[0], n, max_end_j, max_end_i, max_end);
+        struct maxij result = {max_end_i,max_end_j,max_end};
+        return result;
     }
     
      // max is in the middle
      if (debug) printf("emiddle\n");
-     write_file(wfile, &a[0], n, max_mid_i, max_mid_j, max_mid);
-     return max_mid;
-}
+     //write_file(wfile, &a[0], n, max_mid_i, max_mid_j, max_mid);
 
+    struct maxij result = {max_mid_i,max_mid_j,max_mid};
+    return result;
+}
+*/
 // Algorithm 4: Linear-time
-int maxsubarray_4(FILE *wfile, int a[],int n)
+struct maxij maxsubarray_4(FILE *wfile, int a[],int n)
 {
   int max_real = 0;
   int max = 0;
@@ -248,9 +268,10 @@ int maxsubarray_4(FILE *wfile, int a[],int n)
   }
 
   // write the array, sub_array, and max_real to oupt file
-  write_file(wfile, &a[0], n, i, max_i, max_real); 
+  //write_file(wfile, &a[0], n, i, max_i, max_real); 
 
-  return max_real;
+  struct maxij result = {max_i,i,max_real};
+  return result;
 } 
  
 // a debug routine to print array
@@ -333,12 +354,31 @@ int main(){
     }
     print_a(a, size);
 
-    //algorithms for max subarray
+    write_array_file(wfile,a,size);
 
-    // maxsubarray_1(wfile, a, size);
-    // maxsubarray_2(wfile, a, 0, size, 1);
-    maxsubarray_3(wfile, a, size);
-    // maxsubarray_4(wfile, a, size);
+    //algorithms for max subarray
+    struct maxij result;
+
+    result = maxsubarray_1(wfile, a, size);
+    //printf("max:%d,i:%d,j:%d\n",result.max,result.i,result.j );
+    write_array_file(wfile,a + result.i, result.j - result.i + 1);
+    fprintf(wfile, "%d\n", result.max);
+
+    result = maxsubarray_2(wfile, a, 0, size, 1);
+    //printf("max:%d,i:%d,j:%d\n",result.max,result.i,result.j );
+    write_array_file(wfile,a + result.i, result.j - result.i + 1);
+    fprintf(wfile, "%d\n", result.max);
+
+    /*result = maxsubarray_3(wfile, a, size);
+    write_array_file(wfile,a + result.i, result.j - result.i + 1);
+    fprintf(wfile, "%d\n", result.max);*/
+
+    result = maxsubarray_4(wfile, a, size);
+    //printf("max:%d,i:%d,j:%d\n",result.max,result.i,result.j );
+    write_array_file(wfile,a + result.i, result.j - result.i + 1);
+    fprintf(wfile, "%d\n", result.max);
+
+    fprintf(wfile, "%s", "\n");
 
   }
 
