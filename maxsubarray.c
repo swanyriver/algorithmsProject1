@@ -43,9 +43,9 @@ struct maxij
 }*/
 
 int write_array_file(FILE *wfile, int a[], int size_a) {
-    int i;
+  int i;
 
-    // print the array
+  // print the array
   fprintf(wfile, "[");
   for (i=0; i < size_a; i++) {
     fprintf(wfile, "%d", a[i]);
@@ -67,22 +67,26 @@ struct maxij maxsubarray_1(FILE *wfile, int a[], int n)
     int max_j = 0;
     int i = 0;
     int j = 0;
-    
+    int sumIndex;
+
     // Algorithm
     for (j=0; j < n; j++) {
+      for (i=j; i < n; i++) {
+        //compute sum from i to j //j to i for now
         sum_current = 0;
-        for (i=0; i < n; i++) {
-      if (j == i) 
-    sum_current = a[i];
-      else 
-              sum_current = sum_current + a[i]; 
-            if (sum_current > sum_max) {
-                sum_max = sum_current;
-                max_i = i;
-                max_j = j;
-            }         
+        for (sumIndex=j; sumIndex<=i; ++sumIndex) {
+          sum_current+=a[sumIndex];
         }
-    } 
+
+        if (sum_current > sum_max){
+          sum_max = sum_current;
+          max_i = i;
+          max_j = j;
+        }
+
+      }
+    }
+
     if (debug) printf("max_i = %d max_j = %d", max_i, max_j);
     if (debug) printf("sum_max=%d\n",sum_max);
 
@@ -112,7 +116,7 @@ struct maxij maxsubarray_2(FILE *wfile, int a[], int begin, int n, int wflag)
         if (j == i) 
           sum_current = a[i];
         else 
-          sum_current = sum_current + a[i]; 
+          sum_current += a[i]; 
         if (sum_current > sum_max) {
           sum_max = sum_current;
           max_i = i;
