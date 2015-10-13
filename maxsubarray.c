@@ -333,6 +333,11 @@ int main(){
   int size = 0;
   int a[MAX_ARRAY_SIZE];
   int eof_flag = 0;
+  int i;
+  const int NUM_FUNCTIONS = 3;
+
+  struct maxij (*func[3]) (int*,int) = {maxsubarray_1,maxsubarray_2,maxsubarray_4};
+
 
   if ((rfile = fopen(INPUT_FILE_NAME, "r")) == NULL) {
     printf("Cannot open '%s' for reading\n", INPUT_FILE_NAME);
@@ -355,24 +360,11 @@ int main(){
     //algorithms for max subarray
     struct maxij result;
 
-    result = maxsubarray_1(a, size);
-    //printf("max:%d,i:%d,j:%d\n",result.max,result.i,result.j );
-    write_array_file(wfile,a + result.i, result.j - result.i + 1);
-    fprintf(wfile, "%d\n", result.max);
-
-    result = maxsubarray_2(a,size);
-    //printf("max:%d,i:%d,j:%d\n",result.max,result.i,result.j );
-    write_array_file(wfile,a + result.i, result.j - result.i + 1);
-    fprintf(wfile, "%d\n", result.max);
-
-    /*result = maxsubarray_3(wfile, a, size);
-    write_array_file(wfile,a + result.i, result.j - result.i + 1);
-    fprintf(wfile, "%d\n", result.max);*/
-
-    result = maxsubarray_4(a, size);
-    //printf("max:%d,i:%d,j:%d\n",result.max,result.i,result.j );
-    write_array_file(wfile,a + result.i, result.j - result.i + 1);
-    fprintf(wfile, "%d\n", result.max);
+    for(i = 0; i<NUM_FUNCTIONS; ++i){
+      result = (*func[i]) (a,size);
+      write_array_file(wfile,a + result.i, result.j - result.i + 1);
+      fprintf(wfile, "%d\n", result.max);
+    }
 
     fprintf(wfile, "%s", "\n");
 
