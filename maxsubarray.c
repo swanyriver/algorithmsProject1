@@ -276,10 +276,13 @@ void experimentalAnalysis( maxij (*func) (int*,int) ){
   int i;
   clock_t begining, end, total;
 
+  srand (time(NULL));
+
   do{
 
     //read array size
     read = scanf("%d",&n);
+    if (read == EOF) break;
     
     total = 0;
 
