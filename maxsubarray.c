@@ -3,17 +3,16 @@
 
 // maximum number of integers in the array
 #define MAX_ARRAY_SIZE 640000
-#define INPUT_FILE_NAME "i.txt"  // TBD
-#define OUTPUT_FILE_NAME "o.txt"  // TBD
+#define INPUT_FILE_NAME "MSS_Problems.txt"
+#define OUTPUT_FILE_NAME "MSS_Results.txt"
 #define NUM_FUNCTIONS 4
 
 // set it to 1 for debug
 int debug = 0;
 
-struct maxij
-{
+typedef struct{
   int i,j,max;
-};
+} maxij;
 
 
 int write_array_file(FILE *wfile, int a[], int size_a) {
@@ -32,7 +31,7 @@ int write_array_file(FILE *wfile, int a[], int size_a) {
 
 
 //Algorithm 1: Enumeration
-struct maxij maxsubarray_1(int a[], int n)
+maxij maxsubarray_1(int a[], int n)
 {
     int sum_current = 0;
     int sum_max = 0;
@@ -63,13 +62,13 @@ struct maxij maxsubarray_1(int a[], int n)
     if (debug) printf("max_i = %d max_j = %d", max_i, max_j);
     if (debug) printf("sum_max=%d\n",sum_max);
 
-    struct maxij result = {max_i,max_j,sum_max};
+    maxij result = {max_i,max_j,sum_max};
     return result;
 }
 
 //correct
 //Algorithm 2: Better Enumeration
-struct maxij maxsubarray_2(int a[], int n)
+maxij maxsubarray_2(int a[], int n)
 {
     int sum_current = 0;
     int sum_max = 0;
@@ -101,29 +100,29 @@ struct maxij maxsubarray_2(int a[], int n)
     // write the array, sub_array, and sum_max to oupt file
     //write_file(wfile, &a[0], n, max_j, max_i, sum_max); 
 
-    struct maxij result = {max_i,max_j,sum_max};
+    maxij result = {max_i,max_j,sum_max};
     return result;
 }
 
 
 //Algorithm 3: Divide and Conquer
 
-struct maxij max(struct maxij a, struct maxij b){
+maxij max(maxij a, maxij b){
   if (a.max > b.max) return a;
   else return b;
 }
 
-struct maxij threemax(struct maxij a, struct maxij b, struct maxij c){
+maxij threemax(maxij a, maxij b, maxij c){
   return max(max(a,b),c);
 }
 
-struct maxij max_middle(int a[], int start, int mid, int end)
+maxij max_middle(int a[], int start, int mid, int end)
 {
     int sum = 0;
     int left_sum = 0;
     int right_sum = 0 ;
     int i = 0;
-    struct maxij result;
+    maxij result;
 
     for (i = mid; i >= start; i--)
     {
@@ -148,39 +147,39 @@ struct maxij max_middle(int a[], int start, int mid, int end)
     return result;
 }
 
-struct maxij r_maxsubarray_3(int a[],int low, int high){
+maxij r_maxsubarray_3(int a[],int low, int high){
   
   //base case
   if (low == high){
-    struct maxij result = {low,high,a[low]};
+    maxij result = {low,high,a[low]};
     return result;
   }
 
   //recursive case
   int mid = low + (high-low)/2;
 
-  struct maxij left = r_maxsubarray_3(a,low,mid);
-  struct maxij right = r_maxsubarray_3(a,mid+1,high);
-  struct maxij middle = max_middle(a,low,mid,high);
+  maxij left = r_maxsubarray_3(a,low,mid);
+  maxij right = r_maxsubarray_3(a,mid+1,high);
+  maxij middle = max_middle(a,low,mid,high);
 
   return threemax(left,right,middle);
 
 
 }
 
-struct maxij maxsubarray_3(int a[],int n)
+maxij maxsubarray_3(int a[],int n)
 {
   return r_maxsubarray_3(a,0,n-1);
 }
 
 // Algorithm 4: Linear-time
 //This is kadanes algorithm,  but i think the one that the assignment asked for is different
-struct maxij maxsubarray_4(int a[],int n)
+maxij maxsubarray_4(int a[],int n)
 {
   int max = 0;
   int i;
   int temp_i = 0;
-  struct maxij result = {0,0,0};
+  maxij result = {0,0,0};
 
   // Algorithm
   for(i = 0; i < n; i++) {
@@ -265,7 +264,7 @@ int main(){
   int i;
   
 
-  struct maxij (*func[NUM_FUNCTIONS]) (int*,int) = {maxsubarray_1,maxsubarray_2,maxsubarray_3,maxsubarray_4};
+  maxij (*func[NUM_FUNCTIONS]) (int*,int) = {maxsubarray_1,maxsubarray_2,maxsubarray_3,maxsubarray_4};
 
 
   if ((rfile = fopen(INPUT_FILE_NAME, "r")) == NULL) {
@@ -286,7 +285,7 @@ int main(){
 
     write_array_file(wfile,a,size);
 
-    struct maxij result;
+    maxij result;
 
     for(i = 0; i<NUM_FUNCTIONS; ++i){
       result = (*func[i]) (a,size);
