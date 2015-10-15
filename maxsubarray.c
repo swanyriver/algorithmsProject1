@@ -4,7 +4,6 @@
 // maximum number of integers in the array
 #define MAX_ARRAY_SIZE 640000
 #define INPUT_FILE_NAME "MSS_Problems.txt"
-#define OUTPUT_FILE_NAME "MSS_Results.txt"
 #define NUM_FUNCTIONS 4
 
 // set it to 1 for debug
@@ -259,11 +258,13 @@ int read_a(FILE *rfile, int a[], int *eof_flagp) {
 int main(){
 
   FILE* rfile;
-  FILE* wfile;
+  FILE* wfile[NUM_FUNCTIONS];
+  char* filenames[NUM_FUNCTIONS] = {"algo1.txt","algo2.txt","algo3.txt","algo4.txt"};
   int size = 0;
   int a[MAX_ARRAY_SIZE];
   int eof_flag = 0;
   int i;
+  maxij result;
   
 
   maxij (*func[NUM_FUNCTIONS]) (int*,int) = {maxsubarray_1,maxsubarray_2,maxsubarray_3,maxsubarray_4};
@@ -274,9 +275,13 @@ int main(){
     exit(-1);
   }
 
-  if ((wfile = fopen(OUTPUT_FILE_NAME, "w")) == NULL) {
-    printf("Cannot open '%s' for writing\n", OUTPUT_FILE_NAME);
-    exit(-1);
+  for(i=0; i<NUM_FUNCTIONS; ++i){
+
+    if ((wfile[i] = fopen(filenames[i], "w")) == NULL) {
+      printf("Cannot open '%s' for writing\n", filenames[i]);
+      exit(-1);
+    }
+
   }
 
   while (eof_flag == 0) {
@@ -285,27 +290,21 @@ int main(){
     }
     print_a(a, size);
 
-    write_array_file(wfile,a,size);
-
-    maxij result;
-
     for(i = 0; i<NUM_FUNCTIONS; ++i){
+
+      write_array_file(wfile[i],a,size);
+
       result = (*func[i]) (a,size);
 
-      //output returned struct
-      //printf("algo %d result max:%d i%d j%d \n", i,result.max,result.i,result.j);
-
-      write_array_file(wfile,a + result.i, result.j - result.i + 1);
-      fprintf(wfile, "%d\n", result.max);
-    }
-
-    fprintf(wfile, "%s", "\n");
+      write_array_file(wfile[i],a + result.i, result.j - result.i + 1);
+      fprintf(wfile[i], "%d\n\n", result.max);
+    }   
 
   }
 
   // TBD close on exits also
   fclose(rfile);
-  fclose(wfile);
+  for(i = 0; i<NUM_FUNCTIONS; ++i) fclose(wfile[i]);
 
   return 0;
 }
