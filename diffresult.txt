@@ -1,0 +1,9 @@
+Difference between sample output and algorithm output
+ALGORITHM 1
+ALGORITHM 2
+ALGORITHM 3
+18c18
+< [1, 1, 2, 3]
+---
+> [3, 2, 1, 1]
+ALGORITHM 4
