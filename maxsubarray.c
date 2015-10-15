@@ -176,9 +176,6 @@ maxij maxsubarray_3(int a[],int n)
 }
 
 // Algorithm 4: Linear-time
-//This is kadanes algorithm,  but i think the one that the assignment asked for is different
-//modified to run in exactly n iterations, no more searching for begining afterwards
-//////but still doesnt seem exactly like what the assignment requested
 maxij maxsubarray_4(int a[],int n)
 {
   int max = 0;
