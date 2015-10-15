@@ -5,6 +5,7 @@
 #define MAX_ARRAY_SIZE 640000
 #define INPUT_FILE_NAME "i.txt"  // TBD
 #define OUTPUT_FILE_NAME "o.txt"  // TBD
+#define NUM_FUNCTIONS 4
 
 // set it to 1 for debug
 int debug = 0;
@@ -104,14 +105,72 @@ struct maxij maxsubarray_2(int a[], int n)
     return result;
 }
 
+
 //Algorithm 3: Divide and Conquer
 
+struct maxij max(struct maxij a, struct maxij b){
+  if (a.max > b.max) return a;
+  else return b;
+}
 
-struct maxij maxsubarray_3(FILE *wfile, int a[],int n)
+struct maxij threemax(struct maxij a, struct maxij b, struct maxij c){
+  return max(max(a,b),c);
+}
+
+struct maxij max_middle(int a[], int start, int mid, int end)
 {
-  struct maxij result = {0,0,0};
-    
-  return result;
+    int sum = 0;
+    int left_sum = 0;
+    int right_sum = 0 ;
+    int i = 0;
+    struct maxij result;
+
+    for (i = mid; i >= start; i--)
+    {
+      sum = sum + a[i];
+      if (sum > left_sum) {
+          left_sum = sum;
+          result.i = i;
+      }
+    }
+ 
+    sum = 0;
+    for (i = mid+1; i <= end; i++)
+    {
+      sum = sum + a[i];
+      if (sum > right_sum) {
+        right_sum = sum;
+        result.j = i;
+      } 
+    }
+ 
+    result.max = left_sum+right_sum;
+    return result;
+}
+
+struct maxij r_maxsubarray_3(int a[],int low, int high){
+  
+  //base case
+  if (low == high){
+    struct maxij result = {low,high,a[low]};
+    return result;
+  }
+
+  //recursive case
+  int mid = low + (high-low)/2;
+
+  struct maxij left = r_maxsubarray_3(a,low,mid);
+  struct maxij right = r_maxsubarray_3(a,mid+1,high);
+  struct maxij middle = max_middle(a,low,mid,high);
+
+  return threemax(left,right,middle);
+
+
+}
+
+struct maxij maxsubarray_3(int a[],int n)
+{
+  return r_maxsubarray_3(a,0,n-1);
 }
 
 // Algorithm 4: Linear-time
@@ -204,9 +263,9 @@ int main(){
   int a[MAX_ARRAY_SIZE];
   int eof_flag = 0;
   int i;
-  const int NUM_FUNCTIONS = 3;
+  
 
-  struct maxij (*func[3]) (int*,int) = {maxsubarray_1,maxsubarray_2,maxsubarray_4};
+  struct maxij (*func[NUM_FUNCTIONS]) (int*,int) = {maxsubarray_1,maxsubarray_2,maxsubarray_3,maxsubarray_4};
 
 
   if ((rfile = fopen(INPUT_FILE_NAME, "r")) == NULL) {
@@ -227,7 +286,6 @@ int main(){
 
     write_array_file(wfile,a,size);
 
-    //algorithms for max subarray
     struct maxij result;
 
     for(i = 0; i<NUM_FUNCTIONS; ++i){
