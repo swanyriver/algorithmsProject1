@@ -97,9 +97,6 @@ maxij maxsubarray_2(int a[], int n)
     if (debug) printf("max_i = %d max_j = %d", max_i, max_j);
     if (debug) printf("sum_max=%d\n",sum_max);
 
-    // write the array, sub_array, and sum_max to oupt file
-    //write_file(wfile, &a[0], n, max_j, max_i, sum_max); 
-
     maxij result = {max_i,max_j,sum_max};
     return result;
 }
@@ -107,15 +104,18 @@ maxij maxsubarray_2(int a[], int n)
 
 //Algorithm 3: Divide and Conquer
 
+//convinience for comparing 2 structs
 maxij max(maxij a, maxij b){
   if (a.max > b.max) return a;
   else return b;
 }
 
+//convinience for finding the max of 3 structs
 maxij threemax(maxij a, maxij b, maxij c){
   return max(max(a,b),c);
 }
 
+//find maximum sub array crosing mid point
 maxij max_middle(int a[], int start, int mid, int end)
 {
     int sum = 0;
@@ -174,6 +174,8 @@ maxij maxsubarray_3(int a[],int n)
 
 // Algorithm 4: Linear-time
 //This is kadanes algorithm,  but i think the one that the assignment asked for is different
+//modified to run in exactly n iterations, no more searching for begining afterwards
+//////but still doesnt seem exactly like what the assignment requested
 maxij maxsubarray_4(int a[],int n)
 {
   int max = 0;
