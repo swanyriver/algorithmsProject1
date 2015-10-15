@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 // maximum number of integers in the array
 #define MAX_ARRAY_SIZE 640000
@@ -257,7 +258,27 @@ int read_a(FILE *rfile, int a[], int *eof_flagp) {
   return a_dx;
 }
 
-int main(){
+void experimentalAnalysis( maxij (*func) (int*,int) ){
+
+  int read;
+  int i;
+
+  do{
+    read = scanf("%d",&i);
+    printf("%d, n:%d\n",i,read);
+  }while(read != EOF);
+
+}
+
+int main(int argc, char const *argv[])
+{
+
+  maxij (*func[NUM_FUNCTIONS]) (int*,int) = {maxsubarray_1,maxsubarray_2,maxsubarray_3,maxsubarray_4};
+
+  if (argc > 1){
+    experimentalAnalysis(func[atoi(argv[1])]);
+    return 0;
+  }
 
   FILE* rfile;
   FILE* wfile;
@@ -265,9 +286,6 @@ int main(){
   int a[MAX_ARRAY_SIZE];
   int eof_flag = 0;
   int i;
-  
-
-  maxij (*func[NUM_FUNCTIONS]) (int*,int) = {maxsubarray_1,maxsubarray_2,maxsubarray_3,maxsubarray_4};
 
 
   if ((rfile = fopen(INPUT_FILE_NAME, "r")) == NULL) {
