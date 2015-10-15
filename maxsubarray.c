@@ -62,9 +62,6 @@ struct maxij maxsubarray_1(int a[], int n)
     if (debug) printf("max_i = %d max_j = %d", max_i, max_j);
     if (debug) printf("sum_max=%d\n",sum_max);
 
-    // write the array, sub_array, and sum_max to oupt file
-    //write_file(wfile, &a[0], n, max_j, max_i, sum_max); 
-
     struct maxij result = {max_i,max_j,sum_max};
     return result;
 }
@@ -109,114 +106,20 @@ struct maxij maxsubarray_2(int a[], int n)
 
 //Algorithm 3: Divide and Conquer
 
-/*int max_middle(int a[], int start, int mid, int end)
-{
-    int sum = 0;
-    int left_sum = 0;
-    int right_sum = 0 ;
-    int i = 0;
-
-    for (i = mid; i >= start; i--)
-    {
-        sum = sum + a[i];
-        if (sum > left_sum) {
-            left_sum = sum;
-            maximum_i = i;
-  }
-
-    }
- 
-    sum = 0;
-    for (i = mid+1; i <= end; i++)
-    {
-        sum = sum + a[i];
-        if (sum > right_sum) {
-          right_sum = sum;
-          maximum_j = i;
-        } 
-    }
- 
-    return left_sum + right_sum;
-
-}
-
 
 struct maxij maxsubarray_3(FILE *wfile, int a[],int n)
 {
-    int max_sum = 0;
-    int sub[MAX_ARRAY_SIZE];
-    int size_sub;
-    int i;
-    int middle;
-    int max_begin = 0;
-    int max_begin_i = 0;
-    int max_begin_j = 0;
-    int max_mid = 0;
-    int max_mid_i = 0;
-    int max_mid_j = 0;
-    int max_end = 0;
-    int max_end_i = 0;
-    int max_end_j = 0;
-
-    middle = ((n-1)/2);
-    // first half 
-    max_begin = maxsubarray_2(wfile, &a[0], 0, middle, 0);
-    max_begin_i = maximum_i;
-    max_begin_j = maximum_j; 
-    // in between 
-    max_mid = max_middle(&a[0],0,middle,n-1);
-    max_mid_i = maximum_i;
-    max_mid_j = maximum_j; 
-    // second half
-    // max_end = maxsubarray_2(wfile, &a[0], middle+1, (n-(middle+1)), 0);
-    max_end = maxsubarray_2(wfile, &a[0], middle+1, n, 0);
-    max_end_i = maximum_i;
-    max_end_j = maximum_j; 
-    if (debug)
-    {
-       printf("max_begin_i= %d max_begin_j = %d\n" , max_begin_i, max_begin_j);
-       printf("max_mid_i= %d max_mid_j = %d\n" , max_mid_i, max_mid_j);
-       printf("max_end_i= %d max_end_j = %d\n" , max_end_i, max_end_j);
-    }
-
-    printf("max_begin=%d, max_end = %d, max_mid=%d\n", \
-  max_begin, max_end, max_mid);
-    if ((max_begin >= max_end) && (max_begin >= max_mid))
-    {
-        // max is in the begining
-  if (debug) printf("beginning\n");
-        //write_file(wfile, &a[0], n, max_begin_j, max_begin_i, max_begin);
-
-        struct maxij result = {max_begin_i,max_begin_j,sum_max};
-        return result;
-    }
-
-    if ((max_end >= max_begin) && (max_end >= max_mid))
-    {
-        // max is in the end
-  if (debug) printf("end\n");
-        //write_file(wfile, &a[0], n, max_end_j, max_end_i, max_end);
-        struct maxij result = {max_end_i,max_end_j,max_end};
-        return result;
-    }
+  struct maxij result = {0,0,0};
     
-     // max is in the middle
-     if (debug) printf("emiddle\n");
-     //write_file(wfile, &a[0], n, max_mid_i, max_mid_j, max_mid);
-
-    struct maxij result = {max_mid_i,max_mid_j,max_mid};
-    return result;
+  return result;
 }
-*/
+
 // Algorithm 4: Linear-time
 //This is kadanes algorithm,  but i think the one that the assignment asked for is different
 struct maxij maxsubarray_4(int a[],int n)
 {
-  //int max_real = 0;
   int max = 0;
   int i;
-  //int max_i = 0;
-  //int max_j = 0;
   int temp_i = 0;
   struct maxij result = {0,0,0};
 
@@ -234,20 +137,6 @@ struct maxij maxsubarray_4(int a[],int n)
     }
   }
 
-  // find the start of the sub array
-/*  if (debug) printf("max_i=%d\n", max_i);
-  for (max=max_real, i = max_i; i > 0; i--) {
-    max = max - a[i];
-    if (debug) printf("max=%d", max);
-    if (max <= 0) {
-      break;
-    }
-  }*/
-
-  // write the array, sub_array, and max_real to oupt file
-  //write_file(wfile, &a[0], n, i, max_i, max_real); 
-
-  //struct maxij result = {max_i,max_j,max_real};
   return result;
 } 
  
@@ -343,7 +232,10 @@ int main(){
 
     for(i = 0; i<NUM_FUNCTIONS; ++i){
       result = (*func[i]) (a,size);
+
+      //output returned struct
       //printf("algo %d result max:%d i%d j%d \n", i,result.max,result.i,result.j);
+
       write_array_file(wfile,a + result.i, result.j - result.i + 1);
       fprintf(wfile, "%d\n", result.max);
     }
