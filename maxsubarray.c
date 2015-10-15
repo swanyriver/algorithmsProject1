@@ -14,30 +14,6 @@ struct maxij
   int i,j,max;
 };
 
-/*int write_file(FILE *wfile, int a[], int size_a, int begin, int end, int sum_max) {
-    int i;
-
-    // print the array
-    fprintf(wfile, "[");
-    for (i=0; i < size_a; i++) {
-  fprintf(wfile, "%d", a[i]);
-  if (i+1 == size_a)
-    fprintf(wfile, "]\n");
-  else
-    fprintf(wfile, ", ");
-    }
-    // print the sub array
-    fprintf(wfile, "[");
-    for (i=begin; i <= end; i++) {
-  fprintf(wfile, "%d", a[i]);
-  if (i == end)
-    fprintf(wfile, "]\n");
-  else
-    fprintf(wfile, ", ");
-    }
-    // print the sum of sub array
-    fprintf(wfile, "%d\n\n", sum_max);   
-}*/
 
 int write_array_file(FILE *wfile, int a[], int size_a) {
   int i;
@@ -53,8 +29,7 @@ int write_array_file(FILE *wfile, int a[], int size_a) {
   }  
 }
 
-//
-//
+
 //Algorithm 1: Enumeration
 struct maxij maxsubarray_1(int a[], int n)
 {
@@ -237,36 +212,42 @@ struct maxij maxsubarray_3(FILE *wfile, int a[],int n)
 //This is kadanes algorithm,  but i think the one that the assignment asked for is different
 struct maxij maxsubarray_4(int a[],int n)
 {
-  int max_real = 0;
+  //int max_real = 0;
   int max = 0;
   int i;
-  int max_i = 0;
+  //int max_i = 0;
+  //int max_j = 0;
+  int temp_i = 0;
+  struct maxij result = {0,0,0};
 
   // Algorithm
   for(i = 0; i < n; i++) {
     max = max + a[i];
-    if (max < 0)
+    if (max <= 0){
       max = 0;
-    if (max_real < max) {
-      max_real = max;
-      max_i = i;
+      temp_i = i+1;
+    }
+    if (result.max < max) {
+      result.max = max;
+      result.i = temp_i;
+      result.j = i;
     }
   }
 
   // find the start of the sub array
-  if (debug) printf("max_i=%d\n", max_i);
+/*  if (debug) printf("max_i=%d\n", max_i);
   for (max=max_real, i = max_i; i > 0; i--) {
     max = max - a[i];
     if (debug) printf("max=%d", max);
     if (max <= 0) {
       break;
     }
-  }
+  }*/
 
   // write the array, sub_array, and max_real to oupt file
   //write_file(wfile, &a[0], n, i, max_i, max_real); 
 
-  struct maxij result = {i,max_i,max_real};
+  //struct maxij result = {max_i,max_j,max_real};
   return result;
 } 
  
@@ -362,6 +343,7 @@ int main(){
 
     for(i = 0; i<NUM_FUNCTIONS; ++i){
       result = (*func[i]) (a,size);
+      //printf("algo %d result max:%d i%d j%d \n", i,result.max,result.i,result.j);
       write_array_file(wfile,a + result.i, result.j - result.i + 1);
       fprintf(wfile, "%d\n", result.max);
     }
