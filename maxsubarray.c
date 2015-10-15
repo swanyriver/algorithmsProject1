@@ -7,6 +7,7 @@
 #define INPUT_FILE_NAME "MSS_Problems.txt"
 #define OUTPUT_FILE_NAME "MSS_Results.txt"
 #define NUM_FUNCTIONS 4
+#define NUM_TESTS 10
 
 // set it to 1 for debug
 int debug = 0;
@@ -258,14 +259,48 @@ int read_a(FILE *rfile, int a[], int *eof_flagp) {
   return a_dx;
 }
 
+void makeRandomArray(int* a, int n){
+  int i;
+  for (i = 0; i<n; ++i){
+    a[i] = rand()%200 - 100;
+  }
+}
+
+
+
 void experimentalAnalysis( maxij (*func) (int*,int) ){
 
   int read;
+  int n;
+  int a[MAX_ARRAY_SIZE];
   int i;
+  clock_t begining, end, total;
 
   do{
-    read = scanf("%d",&i);
-    printf("%d, n:%d\n",i,read);
+
+    //read array size
+    read = scanf("%d",&n);
+    
+    total = 0;
+
+    //test algorithm on x arrays of size n
+    for (i=0;i<10;++i){
+
+      makeRandomArray(a,n);
+
+      //record begining time
+      begining = clock();
+
+      (*func) (a,n);
+
+      end = clock();
+
+      total += end-begining;
+
+    }
+
+    printf("%d,%f\n", n, ((double)total / CLOCKS_PER_SEC) / NUM_TESTS);
+
   }while(read != EOF);
 
 }
