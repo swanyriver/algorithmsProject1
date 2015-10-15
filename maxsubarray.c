@@ -117,13 +117,13 @@ maxij threemax(maxij a, maxij b, maxij c){
 //find maximum sub array crosing mid point
 maxij max_middle(int a[], int start, int mid, int end)
 {
-    int sum = 0;
-    int left_sum = 0;
+    int sum = a[mid];
+    int left_sum = a[mid];
     int right_sum = 0 ;
     int i = 0;
-    maxij result;
+    maxij result = {mid,mid,0};
 
-    for (i = mid; i >= start; i--)
+    for (i = mid-1; i >= start; i--)
     {
       sum = sum + a[i];
       if (sum > left_sum) {
@@ -157,9 +157,9 @@ maxij r_maxsubarray_3(int a[],int low, int high){
   //recursive case
   int mid = low + (high-low)/2;
 
+  maxij middle = max_middle(a,low,mid,high);
   maxij left = r_maxsubarray_3(a,low,mid);
   maxij right = r_maxsubarray_3(a,mid+1,high);
-  maxij middle = max_middle(a,low,mid,high);
 
   return threemax(left,right,middle);
 
