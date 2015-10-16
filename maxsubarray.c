@@ -293,12 +293,13 @@ void experimentalAnalysis( maxij (*func) (int*,int) ){
 
       (*func) (a,n);
 
+      //capture time to execute function
       end = clock();
-
       total += end-begining;
 
     }
 
+    //display average time for n executions
     printf("%d,%f\n", n, ((double)total / CLOCKS_PER_SEC) / NUM_TESTS);
 
   }while(read != EOF);
