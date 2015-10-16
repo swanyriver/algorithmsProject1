@@ -1,3 +1,5 @@
+make
+./maxsubarray
 echo "Difference between sample output and algorithm output"
 echo "ALGORITHM 1"
 diff algo1.txt input_output/output.txt
