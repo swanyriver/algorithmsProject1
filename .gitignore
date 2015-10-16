@@ -2,3 +2,4 @@ maxsubarray
 *.txt
 !experiment*
 !MSS*
+!README.txt
