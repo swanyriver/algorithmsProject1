@@ -9,14 +9,11 @@
 #define NUM_FUNCTIONS 4
 #define NUM_TESTS 10
 
-// set it to 1 for debug
-int debug = 0;
-
 typedef struct{
   int i,j,max;
 } maxij;
 
-
+//output array or sub array to file
 int write_array_file(FILE *wfile, int a[], int size_a) {
   int i;
 
@@ -61,14 +58,10 @@ maxij maxsubarray_1(int a[], int n)
       }
     }
 
-    if (debug) printf("max_i = %d max_j = %d", max_i, max_j);
-    if (debug) printf("sum_max=%d\n",sum_max);
-
     maxij result = {max_i,max_j,sum_max};
     return result;
 }
 
-//correct
 //Algorithm 2: Better Enumeration
 maxij maxsubarray_2(int a[], int n)
 {
@@ -95,9 +88,6 @@ maxij maxsubarray_2(int a[], int n)
         }         
       }
     } 
-
-    if (debug) printf("max_i = %d max_j = %d", max_i, max_j);
-    if (debug) printf("sum_max=%d\n",sum_max);
 
     maxij result = {max_i,max_j,sum_max};
     return result;
@@ -198,26 +188,9 @@ maxij maxsubarray_4(int a[],int n)
   }
 
   return result;
-} 
- 
-// a debug routine to print array
-int print_a(int a[], int a_dx) {
-  int i;
-
-  printf("INPUT ARRAY: [");
-  for (i=0; i < a_dx; i++) {
-    printf("%i", a[i]);
-    if (i+1 == a_dx) {
-      printf("]\n");
-    } else {
-      printf(",");
-    }
-  }
-  printf("ARRAY size : %d\n", a_dx);
 }
 
 // read one line; in other words, read one array in
-//
 int read_a(FILE *rfile, int a[], int *eof_flagp) {
 
   int i;
@@ -226,30 +199,23 @@ int read_a(FILE *rfile, int a[], int *eof_flagp) {
   int x;
 
   if ((x = fscanf (rfile, "[%d,", &i)) != 1 ) {
-    printf("Done.\n");
     return 0;
   }
-  
-  if (debug) printf("i=%d\n", i);  
-  
+    
   a[a_dx++] = i;
   while ( 1 ) {
     if (fscanf (rfile, "%d,", &i) != 1 ) {
       while (fscanf (rfile, "%c", &c) == 1) {
-        if (debug) printf("c = '%c'", c);  
         if ( c == '\n') {
-          if (debug) printf("c = \\n");  
           break;
         }
         if ( c == EOF ) {
-          printf("c = EOF");  
           *eof_flagp = 1;
           break;
         }
       }
       break;
     }
-    if (debug) printf("ei=%d\n", i);  
     a[a_dx++] = i;
   }
 
@@ -338,7 +304,6 @@ int main(int argc, char const *argv[])
     if ((size = read_a(rfile, &a[0], &eof_flag)) == 0) {
       break;
     }
-    print_a(a, size);
 
     write_array_file(wfile,a,size);
 
@@ -346,9 +311,6 @@ int main(int argc, char const *argv[])
 
     for(i = 0; i<NUM_FUNCTIONS; ++i){
       result = (*func[i]) (a,size);
-
-      //output returned struct
-      //printf("algo %d result max:%d i%d j%d \n", i,result.max,result.i,result.j);
 
       write_array_file(wfile,a + result.i, result.j - result.i + 1);
       fprintf(wfile, "%d\n", result.max);
@@ -358,7 +320,6 @@ int main(int argc, char const *argv[])
 
   }
 
-  // TBD close on exits also
   fclose(rfile);
   fclose(wfile);
 
