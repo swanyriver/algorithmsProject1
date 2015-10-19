@@ -1,6 +1,7 @@
 maxsubarray
 *.txt
-!experiment*
+experiment*
 !MSS*
 !README.txt
-wolf.py
+*.py
+projectreport.pdf
